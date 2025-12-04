@@ -6,7 +6,7 @@ const app = express();
 
 // Configuration
 const PORT = 3001;
-const FRONTEND_PATH = path.join(__dirname, '../frontend/build');
+const FRONTEND_PATH = path.join(__dirname, '../frontend/dist');
 
 app.use(cors());
 app.use(express.json());
