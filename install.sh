@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # AMPOS Installer for Linux
-# Usage: curl -sL https://raw.githubusercontent.com/YOUR_USER/AMPOS/main/install.sh | bash
+# Usage: curl -sL https://raw.githubusercontent.com/pranto48/AMPOS/main/install.sh | bash
 
 echo "=================================="
 echo "      Installing AMPOS..."
