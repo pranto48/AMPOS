@@ -24,7 +24,7 @@ if [ -d "$INSTALL_DIR" ]; then
 else
     echo "Cloning AMPOS from GitHub..."
     # REPLACE WITH YOUR GITHUB URL BELOW
-    git clone https://github.com/YOUR_GITHUB_USERNAME/AMPOS.git "$INSTALL_DIR"
+    git clone https://github.com/pranto48/AMPOS.git "$INSTALL_DIR"
     cd "$INSTALL_DIR"
 fi
 
