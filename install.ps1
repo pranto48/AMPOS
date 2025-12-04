@@ -1,5 +1,5 @@
 # AMPOS Installer for Windows
-# Usage: iwr -useb https://raw.githubusercontent.com/YOUR_USER/AMPOS/main/install.ps1 | iex
+# Usage: iwr -useb https://raw.githubusercontent.com/pranto48/AMPOS/main/install.ps1 | iex
 
 Write-Host "==================================" -ForegroundColor Cyan
 Write-Host "      Installing AMPOS (Windows)..." -ForegroundColor Cyan
