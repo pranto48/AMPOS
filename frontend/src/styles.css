@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  color-scheme: light dark;
+  color-scheme: dark;
   --bg: #0f172a;
   --panel: #111827;
   --panel-2: #0b1220;
@@ -13,6 +13,21 @@
   --gradient: radial-gradient(circle at 20% 20%, rgba(34, 197, 94, 0.2), transparent 40%),
     radial-gradient(circle at 80% 0%, rgba(14, 165, 233, 0.15), transparent 40%),
     radial-gradient(circle at 50% 100%, rgba(59, 130, 246, 0.12), transparent 35%);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+  --bg: #f8fafc;
+  --panel: #ffffff;
+  --panel-2: #f4f5f7;
+  --text: #0f172a;
+  --muted: #475569;
+  --primary: #16a34a;
+  --primary-strong: #15803d;
+  --border: rgba(15, 23, 42, 0.08);
+  --gradient: radial-gradient(circle at 20% 20%, rgba(34, 197, 94, 0.18), transparent 40%),
+    radial-gradient(circle at 80% 0%, rgba(14, 165, 233, 0.12), transparent 40%),
+    radial-gradient(circle at 50% 100%, rgba(59, 130, 246, 0.08), transparent 35%);
 }
 
 * {
@@ -190,6 +205,96 @@ button.ghost {
 .hint {
   color: var(--muted);
   margin-top: 6px;
+}
+
+.file-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.file-row,
+.catalog-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--panel-2);
+  gap: 16px;
+}
+
+.file-name {
+  margin: 0;
+  font-weight: 700;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-label {
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+label {
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+}
+
+input,
+select {
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  background: var(--panel-2);
+  color: var(--text);
+}
+
+select {
+  cursor: pointer;
+}
+
+.theme-toggle {
+  margin-top: 16px;
+}
+
+.theme-options {
+  display: flex;
+  gap: 8px;
+}
+
+.ghost.active {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.catalog {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 @media (max-width: 900px) {
