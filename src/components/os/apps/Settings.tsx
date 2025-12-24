@@ -77,7 +77,7 @@ const Settings: React.FC = () => {
         .from('system_settings')
         .select('value')
         .eq('key', 'github_repo')
-        .single();
+        .maybeSingle();
 
       if (repoData?.value) {
         const repoValue = repoData.value as { url?: string };
@@ -90,7 +90,7 @@ const Settings: React.FC = () => {
         .from('system_settings')
         .select('value')
         .eq('key', 'version')
-        .single();
+        .maybeSingle();
 
       if (versionData?.value) {
         const versionValue = versionData.value as { lastChecked?: string };
