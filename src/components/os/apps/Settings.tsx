@@ -15,7 +15,12 @@ import {
   Check,
   AlertCircle,
   Loader2,
-  Save
+  Save,
+  Webhook,
+  Copy,
+  Play,
+  Sparkles,
+  Moon
 } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
@@ -23,12 +28,14 @@ import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const settingsCategories = [
   { id: 'account', name: 'Account', icon: User },
   { id: 'appearance', name: 'Appearance', icon: Palette },
   { id: 'notifications', name: 'Notifications', icon: Bell },
   { id: 'security', name: 'Security', icon: Shield },
+  { id: 'webhook', name: 'Webhook', icon: Webhook },
   { id: 'network', name: 'Network', icon: Globe },
   { id: 'storage', name: 'Storage', icon: Database },
   { id: 'updates', name: 'Updates', icon: RefreshCw },
@@ -51,7 +58,10 @@ interface UpdateInfo {
   error?: string;
 }
 
+const WEBHOOK_URL = 'https://hjsugraqchavtzmomfki.supabase.co/functions/v1/github-webhook';
+
 const Settings: React.FC = () => {
+  const { theme, setTheme } = useTheme();
   const [selectedCategory, setSelectedCategory] = useState('account');
   const [settings, setSettings] = useState({
     darkMode: true,
@@ -65,9 +75,10 @@ const Settings: React.FC = () => {
   const [isSavingRepo, setIsSavingRepo] = useState(false);
   const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
   const [lastChecked, setLastChecked] = useState<string | null>(null);
+  const [isTestingWebhook, setIsTestingWebhook] = useState(false);
+  const [webhookTestResult, setWebhookTestResult] = useState<{ success: boolean; message: string } | null>(null);
 
   useEffect(() => {
-    // Load saved repository URL
     loadSettings();
   }, []);
 
@@ -176,6 +187,54 @@ const Settings: React.FC = () => {
     }
   };
 
+  const handleCopyWebhookUrl = () => {
+    navigator.clipboard.writeText(WEBHOOK_URL);
+    toast.success('Webhook URL copied to clipboard!');
+  };
+
+  const handleTestWebhook = async () => {
+    setIsTestingWebhook(true);
+    setWebhookTestResult(null);
+
+    try {
+      const response = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-github-event': 'ping',
+        },
+        body: JSON.stringify({
+          zen: 'Test webhook from AMPOS Settings',
+          hook_id: 'test-' + Date.now(),
+          repository: {
+            full_name: 'test/ampos-webhook-test',
+          },
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setWebhookTestResult({
+          success: true,
+          message: 'Webhook is working! Check your notifications.',
+        });
+        toast.success('Webhook test successful!');
+      } else {
+        throw new Error(data.error || 'Webhook test failed');
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to test webhook';
+      setWebhookTestResult({
+        success: false,
+        message,
+      });
+      toast.error(message);
+    } finally {
+      setIsTestingWebhook(false);
+    }
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString('en-US', {
       month: 'short',
@@ -226,6 +285,62 @@ const Settings: React.FC = () => {
         return (
           <div className="space-y-6">
             <h3 className="text-lg font-medium text-foreground mb-4">Appearance</h3>
+            
+            {/* Theme Selection */}
+            <div className="glass p-4 space-y-4">
+              <h4 className="font-medium text-foreground">Theme</h4>
+              <div className="grid grid-cols-2 gap-4">
+                {/* Default Theme */}
+                <button
+                  onClick={() => setTheme('default')}
+                  className={`relative p-4 rounded-xl border-2 transition-all ${
+                    theme === 'default'
+                      ? 'border-primary bg-primary/10'
+                      : 'border-border hover:border-primary/50'
+                  }`}
+                >
+                  <div className="w-full h-24 rounded-lg bg-gradient-to-br from-[hsl(222,47%,8%)] to-[hsl(222,47%,12%)] mb-3 flex items-center justify-center overflow-hidden">
+                    <div className="w-3/4 h-16 rounded bg-[hsl(199,89%,48%)]/20 border border-[hsl(199,89%,48%)]/30" />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Moon className="w-4 h-4 text-primary" />
+                    <span className="text-sm font-medium text-foreground">Default Dark</span>
+                  </div>
+                  {theme === 'default' && (
+                    <div className="absolute top-2 right-2 w-5 h-5 bg-primary rounded-full flex items-center justify-center">
+                      <Check className="w-3 h-3 text-primary-foreground" />
+                    </div>
+                  )}
+                </button>
+
+                {/* Liquid Glass Theme */}
+                <button
+                  onClick={() => setTheme('liquid-glass')}
+                  className={`relative p-4 rounded-xl border-2 transition-all ${
+                    theme === 'liquid-glass'
+                      ? 'border-primary bg-primary/10'
+                      : 'border-border hover:border-primary/50'
+                  }`}
+                >
+                  <div className="w-full h-24 rounded-lg bg-gradient-to-br from-purple-900/50 via-blue-900/30 to-cyan-900/50 mb-3 flex items-center justify-center overflow-hidden relative">
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-cyan-500/20" />
+                    <div className="w-3/4 h-16 rounded bg-gradient-to-br from-purple-500/30 to-cyan-500/20 border border-purple-400/40 backdrop-blur" />
+                    <div className="absolute top-2 left-2 w-8 h-8 rounded-full bg-purple-500/30 blur-xl" />
+                    <div className="absolute bottom-2 right-2 w-6 h-6 rounded-full bg-cyan-500/30 blur-lg" />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-purple-400" />
+                    <span className="text-sm font-medium text-foreground">Liquid Glass</span>
+                  </div>
+                  {theme === 'liquid-glass' && (
+                    <div className="absolute top-2 right-2 w-5 h-5 bg-gradient-to-r from-purple-500 to-cyan-500 rounded-full flex items-center justify-center">
+                      <Check className="w-3 h-3 text-white" />
+                    </div>
+                  )}
+                </button>
+              </div>
+            </div>
+
             <div className="glass p-4 space-y-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -301,6 +416,122 @@ const Settings: React.FC = () => {
                   Change Password
                 </Button>
               </div>
+            </div>
+          </div>
+        );
+
+      case 'webhook':
+        return (
+          <div className="space-y-6">
+            <h3 className="text-lg font-medium text-foreground mb-4">Webhook Configuration</h3>
+            
+            {/* Webhook URL */}
+            <div className="glass p-4 space-y-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Webhook className="w-5 h-5 text-primary" />
+                <h4 className="font-medium text-foreground">GitHub Webhook URL</h4>
+              </div>
+              <p className="text-sm text-muted-foreground mb-3">
+                Use this URL to configure webhooks in your GitHub repository settings.
+              </p>
+              <div className="flex gap-2">
+                <Input
+                  value={WEBHOOK_URL}
+                  readOnly
+                  className="flex-1 bg-secondary/50 font-mono text-xs"
+                />
+                <Button
+                  onClick={handleCopyWebhookUrl}
+                  variant="outline"
+                  size="icon"
+                >
+                  <Copy className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Setup Instructions */}
+            <div className="glass p-4 space-y-4">
+              <h4 className="font-medium text-foreground">Setup Instructions</h4>
+              <div className="space-y-3 text-sm">
+                <div className="flex gap-3">
+                  <span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold shrink-0">1</span>
+                  <p className="text-muted-foreground">Go to your GitHub repository → Settings → Webhooks</p>
+                </div>
+                <div className="flex gap-3">
+                  <span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold shrink-0">2</span>
+                  <p className="text-muted-foreground">Click "Add webhook"</p>
+                </div>
+                <div className="flex gap-3">
+                  <span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold shrink-0">3</span>
+                  <p className="text-muted-foreground">Paste the webhook URL above in "Payload URL"</p>
+                </div>
+                <div className="flex gap-3">
+                  <span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold shrink-0">4</span>
+                  <p className="text-muted-foreground">Set Content type to "application/json"</p>
+                </div>
+                <div className="flex gap-3">
+                  <span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold shrink-0">5</span>
+                  <p className="text-muted-foreground">Select "Just the push event" or customize as needed</p>
+                </div>
+                <div className="flex gap-3">
+                  <span className="w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold shrink-0">6</span>
+                  <p className="text-muted-foreground">Click "Add webhook" to save</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Test Webhook */}
+            <div className="glass p-4 space-y-4">
+              <h4 className="font-medium text-foreground">Test Webhook</h4>
+              <p className="text-sm text-muted-foreground">
+                Send a test ping to verify the webhook is working correctly.
+              </p>
+              <Button
+                onClick={handleTestWebhook}
+                disabled={isTestingWebhook}
+                className="w-full bg-primary text-primary-foreground gap-2"
+              >
+                {isTestingWebhook ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Testing...
+                  </>
+                ) : (
+                  <>
+                    <Play className="w-4 h-4" />
+                    Send Test Ping
+                  </>
+                )}
+              </Button>
+              
+              {webhookTestResult && (
+                <div className={`p-3 rounded-lg flex items-center gap-2 ${
+                  webhookTestResult.success 
+                    ? 'bg-success/10 text-success' 
+                    : 'bg-destructive/10 text-destructive'
+                }`}>
+                  {webhookTestResult.success ? (
+                    <Check className="w-5 h-5" />
+                  ) : (
+                    <AlertCircle className="w-5 h-5" />
+                  )}
+                  <span className="text-sm">{webhookTestResult.message}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Documentation Link */}
+            <div className="text-center">
+              <a
+                href="https://docs.github.com/en/webhooks"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-primary hover:underline inline-flex items-center gap-1"
+              >
+                GitHub Webhooks Documentation
+                <ExternalLink className="w-3 h-3" />
+              </a>
             </div>
           </div>
         );

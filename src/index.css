@@ -6,6 +6,7 @@
 
 @layer base {
   :root {
+    /* Default Dark Theme */
     --background: 222 47% 6%;
     --foreground: 210 40% 98%;
 
@@ -64,6 +65,71 @@
     --sidebar-accent-foreground: 210 40% 98%;
     --sidebar-border: 217 33% 20%;
     --sidebar-ring: 199 89% 48%;
+
+    /* Theme-specific */
+    --glass-blur: 16px;
+    --glass-opacity: 0.8;
+  }
+
+  /* Liquid Glass Theme */
+  .theme-liquid-glass {
+    --background: 220 30% 8%;
+    --foreground: 0 0% 100%;
+
+    --card: 220 40% 12%;
+    --card-foreground: 0 0% 100%;
+
+    --popover: 220 40% 14%;
+    --popover-foreground: 0 0% 100%;
+
+    --primary: 280 100% 70%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 30% 18%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 220 20% 20%;
+    --muted-foreground: 220 10% 60%;
+
+    --accent: 200 100% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 30% 25%;
+    --input: 220 30% 18%;
+    --ring: 280 100% 70%;
+
+    /* Custom tokens for liquid glass */
+    --glass: 220 40% 15%;
+    --glass-border: 280 50% 40%;
+    --taskbar: 220 40% 10%;
+    --window-header: 220 40% 12%;
+    --desktop: 220 30% 6%;
+
+    /* Liquid gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(280 100% 70%), hsl(200 100% 60%));
+    --gradient-accent: linear-gradient(135deg, hsl(320 100% 70%), hsl(280 100% 70%), hsl(200 100% 60%));
+    --gradient-glass: linear-gradient(135deg, hsl(280 50% 30% / 0.3), hsl(200 50% 30% / 0.2));
+
+    /* Liquid shadows */
+    --shadow-window: 0 25px 60px -12px rgba(147, 51, 234, 0.4), 0 0 80px rgba(59, 130, 246, 0.2);
+    --shadow-glow: 0 0 60px hsl(280 100% 70% / 0.4), 0 0 100px hsl(200 100% 60% / 0.2);
+    --shadow-taskbar: 0 -10px 60px rgba(147, 51, 234, 0.3);
+
+    --sidebar-background: 220 40% 10%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 280 100% 70%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 30% 18%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 280 50% 35%;
+    --sidebar-ring: 280 100% 70%;
+
+    /* Enhanced glass effects */
+    --glass-blur: 24px;
+    --glass-opacity: 0.6;
   }
 }
 
@@ -111,6 +177,135 @@
 
   .taskbar-glass {
     @apply bg-taskbar/90 backdrop-blur-xl border-t border-border;
+  }
+
+  /* Liquid Glass specific styles */
+  .theme-liquid-glass .glass {
+    background: linear-gradient(
+      135deg,
+      hsl(280 50% 30% / 0.25),
+      hsl(220 40% 20% / 0.4),
+      hsl(200 50% 30% / 0.25)
+    );
+    backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid hsl(280 50% 50% / 0.3);
+    box-shadow: 
+      inset 0 1px 1px hsl(0 0% 100% / 0.1),
+      inset 0 -1px 1px hsl(0 0% 0% / 0.1),
+      0 8px 32px hsl(280 100% 50% / 0.15);
+  }
+
+  .theme-liquid-glass .glass-strong {
+    background: linear-gradient(
+      135deg,
+      hsl(280 50% 25% / 0.5),
+      hsl(220 40% 15% / 0.6),
+      hsl(200 50% 25% / 0.5)
+    );
+    backdrop-filter: blur(32px) saturate(200%);
+    border: 1px solid hsl(280 50% 60% / 0.4);
+    box-shadow: 
+      inset 0 2px 2px hsl(0 0% 100% / 0.15),
+      inset 0 -2px 2px hsl(0 0% 0% / 0.15),
+      0 12px 48px hsl(280 100% 50% / 0.2);
+  }
+
+  .theme-liquid-glass .window-glass {
+    background: linear-gradient(
+      180deg,
+      hsl(280 40% 20% / 0.6),
+      hsl(220 40% 12% / 0.8)
+    );
+    backdrop-filter: blur(32px) saturate(180%);
+    border: 1px solid hsl(280 50% 50% / 0.35);
+    box-shadow: 
+      0 25px 60px -12px rgba(147, 51, 234, 0.35),
+      0 0 80px rgba(59, 130, 246, 0.15),
+      inset 0 1px 2px hsl(0 0% 100% / 0.1);
+  }
+
+  .theme-liquid-glass .taskbar-glass {
+    background: linear-gradient(
+      180deg,
+      hsl(280 40% 15% / 0.7),
+      hsl(220 40% 8% / 0.85)
+    );
+    backdrop-filter: blur(32px) saturate(200%);
+    border-top: 1px solid hsl(280 50% 50% / 0.3);
+    box-shadow: 
+      0 -10px 40px rgba(147, 51, 234, 0.25),
+      inset 0 1px 1px hsl(0 0% 100% / 0.08);
+  }
+
+  /* Liquid glass button effects */
+  .theme-liquid-glass .btn-glass {
+    background: linear-gradient(
+      135deg,
+      hsl(280 50% 40% / 0.3),
+      hsl(200 50% 40% / 0.2)
+    );
+    backdrop-filter: blur(16px);
+    border: 1px solid hsl(280 50% 60% / 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .theme-liquid-glass .btn-glass:hover {
+    background: linear-gradient(
+      135deg,
+      hsl(280 50% 50% / 0.4),
+      hsl(200 50% 50% / 0.3)
+    );
+    box-shadow: 0 0 30px hsl(280 100% 70% / 0.3);
+    border-color: hsl(280 50% 70% / 0.5);
+  }
+
+  /* Liquid glass glow effects */
+  .theme-liquid-glass .glow-primary {
+    box-shadow: 
+      0 0 40px hsl(280 100% 70% / 0.4),
+      0 0 80px hsl(200 100% 60% / 0.2);
+  }
+
+  .theme-liquid-glass .gradient-text {
+    background: linear-gradient(135deg, hsl(280 100% 70%), hsl(200 100% 60%));
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  /* Liquid orb animation for desktop */
+  .liquid-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+    animation: float-orb 20s ease-in-out infinite;
+  }
+
+  .liquid-orb-1 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, hsl(280 100% 60% / 0.6), transparent);
+    top: 10%;
+    left: 10%;
+    animation-delay: 0s;
+  }
+
+  .liquid-orb-2 {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, hsl(200 100% 60% / 0.5), transparent);
+    top: 60%;
+    right: 15%;
+    animation-delay: -7s;
+  }
+
+  .liquid-orb-3 {
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, hsl(320 100% 60% / 0.4), transparent);
+    bottom: 20%;
+    left: 30%;
+    animation-delay: -14s;
   }
 
   .icon-hover {
@@ -218,14 +413,29 @@
   }
 }
 
+@keyframes float-orb {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(30px, -30px) scale(1.1);
+  }
+  50% {
+    transform: translate(-20px, 20px) scale(0.95);
+  }
+  75% {
+    transform: translate(20px, 10px) scale(1.05);
+  }
+}
+
 @keyframes pulse-glow {
   0%, 100% {
     opacity: 1;
-    box-shadow: 0 0 20px hsl(199 89% 48% / 0.4);
+    box-shadow: 0 0 20px hsl(var(--primary) / 0.4);
   }
   50% {
     opacity: 0.8;
-    box-shadow: 0 0 40px hsl(199 89% 48% / 0.6);
+    box-shadow: 0 0 40px hsl(var(--primary) / 0.6);
   }
 }
 
