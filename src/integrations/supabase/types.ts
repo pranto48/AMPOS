@@ -65,6 +65,45 @@ export type Database = {
         }
         Relationships: []
       }
+      webhook_notifications: {
+        Row: {
+          commit_author: string | null
+          commit_message: string | null
+          commit_sha: string | null
+          commit_url: string | null
+          created_at: string
+          event_type: string
+          id: string
+          is_read: boolean
+          payload: Json | null
+          repository: string
+        }
+        Insert: {
+          commit_author?: string | null
+          commit_message?: string | null
+          commit_sha?: string | null
+          commit_url?: string | null
+          created_at?: string
+          event_type: string
+          id?: string
+          is_read?: boolean
+          payload?: Json | null
+          repository: string
+        }
+        Update: {
+          commit_author?: string | null
+          commit_message?: string | null
+          commit_sha?: string | null
+          commit_url?: string | null
+          created_at?: string
+          event_type?: string
+          id?: string
+          is_read?: boolean
+          payload?: Json | null
+          repository?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

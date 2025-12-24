@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.update-github-settings]
 verify_jwt = false
+
+[functions.github-webhook]
+verify_jwt = false
