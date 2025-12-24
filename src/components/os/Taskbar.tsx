@@ -13,9 +13,12 @@ import {
   Settings,
   Store,
   Terminal,
-  Info
+  Info,
+  Bell
 } from 'lucide-react';
 import { format } from 'date-fns';
+import { supabase } from '@/integrations/supabase/client';
+import NotificationCenter from './NotificationCenter';
 
 const iconComponents: Record<string, React.FC<{ className?: string }>> = {
   Folder,
@@ -30,11 +33,58 @@ const Taskbar: React.FC = () => {
   const { windows, focusWindow, toggleStartMenu, isStartMenuOpen, user, logout } = useOS();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [showSystemTray, setShowSystemTray] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
+
+  useEffect(() => {
+    // Fetch initial unread count
+    fetchUnreadCount();
+
+    // Subscribe to realtime updates
+    const channel = supabase
+      .channel('taskbar-notifications')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'webhook_notifications',
+        },
+        () => {
+          setUnreadCount((prev) => prev + 1);
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'webhook_notifications',
+        },
+        () => {
+          fetchUnreadCount();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
+  const fetchUnreadCount = async () => {
+    const { count } = await supabase
+      .from('webhook_notifications')
+      .select('*', { count: 'exact', head: true })
+      .eq('is_read', false);
+
+    setUnreadCount(count || 0);
+  };
 
   return (
     <div className="fixed bottom-0 left-0 right-0 h-14 taskbar-glass z-50">
@@ -83,6 +133,25 @@ const Taskbar: React.FC = () => {
             <Wifi className="w-4 h-4 text-muted-foreground" />
             <Volume2 className="w-4 h-4 text-muted-foreground" />
             <Battery className="w-4 h-4 text-muted-foreground" />
+          </div>
+
+          {/* Notification Bell */}
+          <div className="relative">
+            <button
+              onClick={() => setShowNotifications(!showNotifications)}
+              className="p-2 hover:bg-secondary/50 rounded-lg transition-colors relative"
+            >
+              <Bell className="w-4 h-4 text-muted-foreground" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
+            </button>
+            <NotificationCenter
+              isOpen={showNotifications}
+              onClose={() => setShowNotifications(false)}
+            />
           </div>
 
           {/* Date/Time */}
