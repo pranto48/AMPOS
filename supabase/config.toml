@@ -1,1 +1,7 @@
 project_id = "hjsugraqchavtzmomfki"
+
+[functions.check-github-updates]
+verify_jwt = false
+
+[functions.update-github-settings]
+verify_jwt = false
