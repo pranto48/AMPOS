@@ -317,7 +317,7 @@ services:
       - "3306:3306"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p\$$MYSQL_ROOT_PASSWORD"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -p\$\$MYSQL_ROOT_PASSWORD"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -410,6 +410,7 @@ function portal_header($title = "IT Support BD Portal") {
     $nav_links = [
         'products.php' => '<i class="fas fa-box mr-1"></i> Products',
         'dashboard.php' => '<i class="fas fa-th-large mr-1"></i> Dashboard',
+        'ampos-licenses.php' => '<i class="fas fa-shield-alt mr-1"></i> AMPOS',
         'support.php' => '<i class="fas fa-headset mr-1"></i> Support',
         'profile.php' => '<i class="fas fa-user-circle mr-1"></i> Profile',
         'cart.php' => '<i class="fas fa-shopping-cart mr-1"></i> Cart',
@@ -507,6 +508,7 @@ function admin_header($title = "Admin Panel") {
         'index.php' => '<i class="fas fa-th-large mr-1"></i> Dashboard',
         'users.php' => '<i class="fas fa-users mr-1"></i> Customers',
         'license-manager.php' => '<i class="fas fa-key mr-1"></i> Licenses',
+        'ampos-license-manager.php' => '<i class="fas fa-shield-alt mr-1"></i> AMPOS Licenses',
         'products.php' => '<i class="fas fa-box mr-1"></i> Products',
         'tickets.php' => '<i class="fas fa-headset mr-1"></i> Tickets',
         'smtp_settings.php' => '<i class="fas fa-envelope-open-text mr-1"></i> SMTP',
